@@ -1,0 +1,5 @@
+1 1 0 0 0 0
+1
+
+solvable in 0 steps
+1/1 configurations

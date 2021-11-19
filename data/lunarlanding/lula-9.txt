@@ -1,0 +1,9 @@
+5 5 2 2
+O 0 1
+G 1 4
+P 4 0
+E 4 1
+Y 4 2
+
+solvable in 8 steps
+81/115 configurations

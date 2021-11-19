@@ -1,0 +1,9 @@
+5 7 4 1 1 1
+0 0 0 0 0 0 0
+1 1 1 1 0 0 0
+0 0 1 1 0 0 0
+0 0 1 1 0 0 0
+2 1 1 0 0 0 0
+
+14/28 configurations
+TWO solutions of 5 steps

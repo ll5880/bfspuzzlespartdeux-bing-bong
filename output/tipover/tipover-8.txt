@@ -1,0 +1,4 @@
+Total configs: 530
+Unique configs: 240
+No solution
+

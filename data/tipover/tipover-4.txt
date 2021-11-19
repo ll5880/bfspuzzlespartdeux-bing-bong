@@ -1,0 +1,8 @@
+4 6 2 4 0 5
+0 1 1 1 1 1
+0 0 0 0 1 1
+0 0 1 0 1 1
+3 1 0 0 2 0
+
+10/18 configurations
+solvable in 3 steps

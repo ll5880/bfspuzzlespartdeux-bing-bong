@@ -1,0 +1,10 @@
+10 8 1 1
+C 0 2
+D 1 0
+E 2 1
+F 9 0
+G 9 2
+H 8 7
+I 0 6
+
+Weird board, weird figure names

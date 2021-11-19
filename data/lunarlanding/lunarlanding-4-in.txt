@@ -1,0 +1,36 @@
+help
+choose 2 4
+go west
+go west
+choose 1 2
+go west
+choose 1 1
+show
+hint
+load data/lunarlanding/lula-4.text
+reload
+choose 2 2
+go east
+choose 2 3
+go south
+choose 3 0
+go east
+choose 1 2
+go south
+choose 2 2
+go east
+choose 0 2
+go south
+load data/lunarlanding/lula-7.txt
+hint
+hint
+hint
+hint
+hint
+hint
+choose 2 2
+go west
+choose 2 1
+go east
+hint
+quit

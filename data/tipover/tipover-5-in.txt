@@ -1,0 +1,26 @@
+help
+move north
+move eeast
+move north
+hint
+hint
+move north
+reload
+load data/tipover/tipover-2.txt
+move east
+move north
+move north
+move north
+hint
+hint
+load data/tipover/tipover-6.txt
+hint
+move north
+load data/tipover/tipover-5.txt
+move west
+moove north
+move north
+move north
+move west
+hint
+quit

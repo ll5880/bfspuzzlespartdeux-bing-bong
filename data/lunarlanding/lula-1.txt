@@ -1,0 +1,7 @@
+5 5 2 2
+O 0 1
+B 3 2
+E 0 4
+
+solvable in 2 steps
+5/5 configurations

@@ -1,0 +1,10 @@
+5 5 2 2
+E 0 2
+O 1 2
+G 2 2
+P 2 4
+Y 3 0
+B 4 3
+
+solvable in 6 steps
+31/37 configurations

@@ -1,0 +1,10 @@
+5 5 2 2
+O 0 0
+G 0 2
+P 1 4
+Y 2 0
+E 3 3
+B 4 1
+
+solvable in 9 steps
+888/1397 configurations
