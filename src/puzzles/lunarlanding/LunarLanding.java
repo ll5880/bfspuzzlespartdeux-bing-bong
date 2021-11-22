@@ -1,5 +1,11 @@
 package puzzles.lunarlanding;
 
+import puzzles.lunarlanding.model.LunarLandingConfig;
+import solver.Configuration;
+import solver.Solver;
+
+import java.util.List;
+
 /**
  * DESCRIPTION
  * @author YOUR NAME HERE
@@ -13,6 +19,25 @@ public class LunarLanding {
      */
 
     public static void main( String[] args ) {
-        System.err.println( "REPLACE THIS METHOD!" );
+        if ( args.length != 1) {
+            System.out.println("No game file found.");
+        }
+        else{
+            //fix the configuration
+            LunarLandingConfig lunar = new LunarLandingConfig(args[0]);
+            System.out.println(lunar);
+
+            // prints out the solution, solution is not fully made yet
+//            List<Configuration> path = Solver.solve(lunar);
+//            if (path.size() > 0) {
+//                for (int i = 0; i < path.size(); i++) {
+//                    System.out.println("Step " + i + ": " + path.get(i));
+//                }
+//            }
+//            else {
+//                System.out.println("No Solution");
+//            }
+        }
+
     }
 }
