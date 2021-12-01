@@ -7,8 +7,8 @@ import solver.Solver;
 import java.util.List;
 
 /**
- * DESCRIPTION
- * @author YOUR NAME HERE
+ * Main program for LunarLanding puzzle.
+ * @author Lucie Lim
  * November 2021
  */
 public class LunarLanding {
@@ -25,18 +25,16 @@ public class LunarLanding {
         else{
             //fix the configuration
             LunarLandingConfig lunar = new LunarLandingConfig(args[0]);
-            System.out.println(lunar);
-
             // prints out the solution, solution is not fully made yet
-//            List<Configuration> path = Solver.solve(lunar);
-//            if (path.size() > 0) {
-//                for (int i = 0; i < path.size(); i++) {
-//                    System.out.println("Step " + i + ": " + path.get(i));
-//                }
-//            }
-//            else {
-//                System.out.println("No Solution");
-//            }
+            List<Configuration> path = Solver.solve(lunar);
+            if (path.size() > 0) {
+                for (int i = 0; i < path.size(); i++) {
+                    System.out.println("Step " + i + ": " + path.get(i));
+                }
+            }
+            else {
+                System.out.println("No Solution");
+            }
         }
 
     }
