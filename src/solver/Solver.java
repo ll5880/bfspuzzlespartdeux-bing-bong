@@ -36,11 +36,13 @@ public class Solver {
                 // hops from the solution config to the config it's attached to until it gets to config started with
                 path.add(0, current);
                 Configuration node = predecessors.get(current);
-                while(node != config) {
+                while(node != config && node != null) {
                     path.add(0, node);
                     node = predecessors.get(node);
                 }
-                path.add(0, config);
+                if (node != null) {
+                    path.add(0, config);
+                }
                 System.out.println("Total Configs: " + total);
                 System.out.println("Unique Configs: " + unique);
                 return path;

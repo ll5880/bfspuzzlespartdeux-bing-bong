@@ -1,5 +1,13 @@
 package puzzles.tipover;
 
+import puzzles.tipover.model.TipOverConfig;
+import solver.Solver;
+import solver.Configuration;
+
+import java.io.FileNotFoundException;
+import java.util.List;
+
+
 /**
  * DESCRIPTION
  * @author YOUR NAME HERE
@@ -12,7 +20,14 @@ public class TipOver {
      * run the solver on the puzzle
      */
 
-    public static void main( String[] args ) {
-        System.err.println( "REPLACE THIS METHOD!" );
+    public static void main( String[] args ) throws FileNotFoundException {
+        TipOverConfig config = new TipOverConfig(args[0]);
+        List<Configuration> path = Solver.solve(config);
+        int counter = 0;
+        for (Configuration conf : path) {
+            System.out.println("Step " + counter + ": ");
+            System.out.println(conf + "\n");
+            counter++;
+        }
     }
 }
