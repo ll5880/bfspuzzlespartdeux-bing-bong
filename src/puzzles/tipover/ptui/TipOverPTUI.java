@@ -33,21 +33,15 @@ public class TipOverPTUI implements Observer<TipOverModel, Object>{
                     break;
                 } else if (fields[0].startsWith("m")) {
                     if (fields[0].equals("move")) {
-                        if (fields[1].equals("north")) {
-                            this.model.getNorth();
-
-                        } else if (fields[1].equals("east")) {
-                            this.model.getEast();
-
-                        } else if (fields[1].equals("south")) {
-                            this.model.getSouth();
-
-                        } else if (fields[1].equals("west")) {
-                            this.model.getWest();
-
-                        } else {
-                            System.out.println("Illegal Command");
-                            this.displayHelp();
+                        switch (fields[1]) {
+                            case "north" -> this.model.getNorth();
+                            case "east" -> this.model.getEast();
+                            case "south" -> this.model.getSouth();
+                            case "west" -> this.model.getWest();
+                            default -> {
+                                System.out.println("Illegal Command");
+                                this.displayHelp();
+                            }
                         }
                     }
                     else {
@@ -101,11 +95,15 @@ public class TipOverPTUI implements Observer<TipOverModel, Object>{
     }
 
     public void displayHelp() {
-        System.out.println("Legal Commands are...\n\t> help : Show all commands.\n\t" +
-                "> move {north|south|east|west}: Go in given direction, possibly tipping a tower. (1 argument)\n\t" +
-                "> reload filename: Load the most recent file again.\n\t" +
-                "> load {board-file-name}: Load a new game board file. (1 argument)\n\t" +
-                "> hint Make the next move for me.\n\t> show Display the board.\n\t> quit");
+        System.out.println("""
+                Legal Commands are...
+                \t> help : Show all commands.
+                \t> move {north|south|east|west}: Go in given direction, possibly tipping a tower. (1 argument)
+                \t> reload filename: Load the most recent file again.
+                \t> load {board-file-name}: Load a new game board file. (1 argument)
+                \t> hint Make the next move for me.
+                \t> show Display the board.
+                \t> quit""");
     }
 
     public static void main( String[] args ) throws FileNotFoundException {

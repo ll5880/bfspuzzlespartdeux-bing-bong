@@ -6,8 +6,8 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+import puzzles.tipover.model.Observer;
 import puzzles.tipover.model.TipOverModel;
-import util.Observer;
 
 import java.io.File;
 
@@ -17,7 +17,10 @@ import java.io.File;
  * November 2021
  */
 public class TipOverGUI extends Application
-        implements Observer< TipOverModel, Object > {
+        implements Observer<TipOverModel, Object> {
+
+    private TipOverModel model;
+
 
     @Override
     public void start( Stage stage ) {
@@ -39,8 +42,18 @@ public class TipOverGUI extends Application
         System.out.println( "My model has changed! (DELETE THIS LINE)");
     }
 
-    public static void main( String[] args ) {
-        System.err.println( "REPLACE THIS METHOD!" );
-        Application.launch( args );
+    /**
+     * main entry point launches the JavaFX GUI.
+     *
+     * @param args not used
+     */
+    public static void main(String[] args) {
+        Application.launch(args);
+    }
+
+    @Override
+    public void init() throws Exception {
+        this.model.addObserver(this);
+        System.out.println("init: Initialize and connect to model!");
     }
 }
