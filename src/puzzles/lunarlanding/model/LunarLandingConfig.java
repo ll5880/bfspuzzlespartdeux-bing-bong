@@ -16,6 +16,7 @@ import java.util.Scanner;
  */
 
 public class LunarLandingConfig implements Configuration {
+    private boolean exceptionCaught = false;
     private Grid<String> board;
     private int row;
     private int column;
@@ -63,11 +64,14 @@ public class LunarLandingConfig implements Configuration {
             Set<String> keys = figures.keySet();
             for (String key : keys) {
                 board.set(key, figures.get(key).row(), figures.get(key).col());
+
             }
             board.set("!", lunarLanderCoordinates.row(), lunarLanderCoordinates.col());
+            exceptionCaught = false;
 
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            System.out.println("File not found");
+            exceptionCaught = true;
         }
     }
 
@@ -119,13 +123,25 @@ public class LunarLandingConfig implements Configuration {
 
     }
 
+     public boolean getExceptionCaught() {
+        return exceptionCaught;
+     }
+
+     public void setFigure(String figure, Coordinates coords) {
+         Coordinates oldcords = figures.get(figure);
+         figures.put(figure, coords);
+         board.set(figure, figures.get(figure).row(), figures.get(figure).col());
+         board.set("_", oldcords.row(), oldcords.col());
+
+     }
+
     /**
      * A method that moves a figure north to another figure
      *
      * @param currentFigure the figure being moved
      * @return Coordinates of the figure after it moves to another figure
      */
-    private Coordinates MoveNorth(String currentFigure) {
+    public Coordinates MoveNorth(String currentFigure) {
         Coordinates newFigCords = null;
         for (String key : figures.keySet()) {
             if (figures.get(key).col() == figures.get(currentFigure).col() &&
@@ -143,7 +159,7 @@ public class LunarLandingConfig implements Configuration {
      * @param currentFigure the figure being moved
      * @return Coordinates of the figure after it moves to another figure
      */
-    private Coordinates MoveSouth(String currentFigure) {
+    public Coordinates MoveSouth(String currentFigure) {
         Coordinates newFigCords = null;
         for (String key : figures.keySet()) {
             if (figures.get(key).col() == figures.get(currentFigure).col() &&
@@ -160,7 +176,7 @@ public class LunarLandingConfig implements Configuration {
      * @param currentFigure the figure being moved
      * @return Coordinates of the figure after it moves to another figure
      */
-    private Coordinates MoveWest(String currentFigure) {
+    public Coordinates MoveWest(String currentFigure) {
         Coordinates newFigCords = null;
         for (String key : figures.keySet()) {
             if (figures.get(key).row() == figures.get(currentFigure).row() &&
@@ -177,7 +193,7 @@ public class LunarLandingConfig implements Configuration {
      * @param currentFigure the figure being moved
      * @return Coordinates of the figure after it moves to another figure
      */
-    private Coordinates MoveEast(String currentFigure) {
+    public Coordinates MoveEast(String currentFigure) {
         Coordinates newFigCords = null;
         for (String key : figures.keySet()) {
             if (figures.get(key).row() == figures.get(currentFigure).row() &&
@@ -270,14 +286,13 @@ public class LunarLandingConfig implements Configuration {
      * @param direction destination figure
      * @return boolean if there is something in between the 2 figures
      */
-    private String canMove(String currentFigure, String direction){
+    public String canMove(String currentFigure, String direction){
         //North
         if (direction.equals("north")) {
             for (String key : figures.keySet()) {
                 if (figures.get(key).col() == figures.get(currentFigure).col() &&
                         figures.get(key).row() < figures.get(currentFigure).row() &&
                         nothingBetween(figures.get(currentFigure), figures.get(key))) {
-                    //moves the figure
                     return "North";
                 }
             }
@@ -315,6 +330,24 @@ public class LunarLandingConfig implements Configuration {
         return "Can not move";
     }
 
+    public String find(Coordinates coordinates){
+        for (String key : figures.keySet()) {
+            if (figures.get(key).equals(coordinates)) {
+                return key;
+            }
+        }
+        //assumes we can't find key
+        return null;
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public int getColumn() {
+        return column;
+    }
+
     /**
      * Returns the string representation of the puzzle
      */
@@ -335,13 +368,24 @@ public class LunarLandingConfig implements Configuration {
         }
         result.append("\n");
 
+        boolean isFigureOnGoal = false;
+
         //prints the body of the grid
         for (int r = 0; r < row; r++) {
             result.append(r + " |");
             for (int c = 0; c < column; c++) {
-                if (r == lunarLanderCoordinates.row() && c == lunarLanderCoordinates.col()
-                        && figures.get("E").equals(lunarLanderCoordinates)) {
-                    result.append(" ").append("!E");
+                if (r == lunarLanderCoordinates.row() && c == lunarLanderCoordinates.col()) {
+                    Set<String> keys = figures.keySet();
+                    for (String key : keys) {
+                        if (figures.get(key).equals(lunarLanderCoordinates)) {
+                            result.append(" !").append(key);
+                            isFigureOnGoal = true;
+                        }
+                    }
+                    if (!isFigureOnGoal) {
+                        result.append("  !");
+                        isFigureOnGoal = false;
+                    }
                 } else {
                     result.append("  ").append(board.get(r, c));
                 }
