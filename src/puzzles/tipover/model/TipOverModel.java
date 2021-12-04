@@ -19,7 +19,7 @@ public class TipOverModel{
     private TipOverConfig config;
     private List<Configuration> path;
     private List< Observer< TipOverModel, Object > > observers;
-    private boolean solvable;
+    private boolean solvable = true;
 
     public TipOverModel(String filename) throws FileNotFoundException {
         this.observers = new LinkedList<>();
@@ -133,6 +133,7 @@ public class TipOverModel{
         } else {
             System.out.println("Unsolvable Board");
             solvable = false;
+            this.announce(null);
         }
         return this.config;
     }

@@ -3,7 +3,6 @@ package puzzles.tipover.ptui;
 import puzzles.tipover.model.*;
 import puzzles.tipover.model.Observer;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
@@ -50,6 +49,10 @@ public class TipOverPTUI implements Observer<TipOverModel, Object>{
                             System.out.println("Illegal Command");
                             this.displayHelp();
                         }
+                    }
+                    else {
+                        System.out.println("Illegal Command");
+                        this.displayHelp();
                     }
                 } else if (fields[0].startsWith("h")) {
                     if (fields[0].equals("help")) {
