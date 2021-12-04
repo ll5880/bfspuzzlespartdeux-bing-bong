@@ -20,6 +20,8 @@ public class LunarLandingConfig implements Configuration {
     private int row;
     private int column;
     private int numOfConfigs = 0;
+    private int total = 1;
+    private int unique = 1;
     private Coordinates lunarLanderCoordinates;
 
     //holds the info of the figures
@@ -237,6 +239,26 @@ public class LunarLandingConfig implements Configuration {
             }
         }
         return neighbors;
+    }
+
+    @Override
+    public void addTotals() {
+        total++;
+    }
+
+    @Override
+    public void addUnique() {
+        unique++;
+    }
+
+    @Override
+    public int returnTotal() {
+        return total;
+    }
+
+    @Override
+    public int returnUnique() {
+        return unique;
     }
 
     /**

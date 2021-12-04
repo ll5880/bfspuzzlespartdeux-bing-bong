@@ -27,6 +27,8 @@ public class LunarLanding {
             LunarLandingConfig lunar = new LunarLandingConfig(args[0]);
             // prints out the solution, solution is not fully made yet
             List<Configuration> path = Solver.solve(lunar);
+            System.out.println("Total Configs: " + lunar.returnTotal());
+            System.out.println("Unique Configs: " + lunar.returnUnique());
             if (path.size() > 0) {
                 for (int i = 0; i < path.size(); i++) {
                     System.out.println("Step " + i + ": " + path.get(i));
