@@ -19,9 +19,12 @@ public class TipOverConfig implements Configuration {
     private static int length;
 
     private int height;
+    private boolean tipped;
 
     private Coordinates coords;
     private static Coordinates goal;
+    private int total = 1;
+    private int unique = 1;
 
     public TipOverConfig(String filename) throws FileNotFoundException {
         try (Scanner in = new Scanner(new File(filename))) {
@@ -59,61 +62,109 @@ public class TipOverConfig implements Configuration {
             case "North" -> {
                 if(other.coords.row() - other.height >= 0) {
                     if (other.height > 1) {
-                        for (int i = 1; i < other.height + 1; i++) {
-                            this.grid[other.coords.row()][other.coords.col()] = "0";
-                            this.grid[other.coords.row() - i][other.coords.col()] = "1";
+                        if (this.grid[other.coords.row()-1][other.coords.col()].equals("0")) {
+                            for (int i = 1; i < other.height + 1; i++) {
+                                this.grid[other.coords.row()][other.coords.col()] = "0";
+                                this.grid[other.coords.row()-i][other.coords.col()] = "1";
+                            }
+                            this.coords = new Coordinates(other.coords.row() - 1, other.coords.col());
+                            this.tipped = true;
+                        } else {
+                            this.coords = new Coordinates(other.coords.row() - 1, other.coords.col());
+                            this.tipped = false;
                         }
-                        this.coords = new Coordinates(other.coords.row() - 1, other.coords.col());
                     }
                     else {
-                        this.coords = new Coordinates(other.coords.row() - other.height, other.coords.col());
+                        this.coords = new Coordinates(other.coords.row() -1, other.coords.col());
+                        this.tipped = false;
                     }
+                }
+                else if (other.coords.row() - 1 >= 0) {
+                    this.coords = new Coordinates(other.coords.row() - 1, other.coords.col());
+                    this.tipped = false;
                 }
             }
             case "East" -> {
                 if(other.coords.col() + other.height < length) {
                     if (other.height > 1) {
-                        for (int i = 1; i < other.height + 1; i++) {
-                            this.grid[other.coords.row()][other.coords.col()] = "0";
-                            this.grid[other.coords.row()][other.coords.col() + i] = "1";
+                        if (this.grid[other.coords.row()][other.coords.col() + 1].equals("0")) {
+                            for (int i = 1; i < other.height + 1; i++) {
+                                this.grid[other.coords.row()][other.coords.col()] = "0";
+                                this.grid[other.coords.row()][other.coords.col() + i] = "1";
+                            }
+                            this.coords = new Coordinates(other.coords.row(), other.coords.col() + 1);
+                            this.tipped = true;
+                        } else {
+                            this.coords = new Coordinates(other.coords.row(), other.coords.col() + 1);
+                            this.tipped = false;
                         }
-                        this.coords = new Coordinates(other.coords.row(), other.coords.col() + 1);
                     }
                     else {
-                        this.coords = new Coordinates(other.coords.row(), other.coords.col() + other.height);
+                        this.coords = new Coordinates(other.coords.row(), other.coords.col() + 1);
+                        this.tipped = false;
                     }
+                }
+                else if (other.coords.col() + 1 < length) {
+                    this.coords = new Coordinates(other.coords.row(), other.coords.col() + 1);
+                    this.tipped = false;
                 }
             }
             case "South" -> {
                 if(other.coords.row() + other.height < width) {
                     if (other.height > 1) {
-                        for (int i = 1; i < other.height + 1; i++) {
-                            this.grid[other.coords.row()][other.coords.col()] = "0";
-                            this.grid[other.coords.row() + i][other.coords.col()] = "1";
+                        if (this.grid[other.coords.row()+1][other.coords.col()].equals("0")) {
+                            for (int i = 1; i < other.height + 1; i++) {
+                                this.grid[other.coords.row()][other.coords.col()] = "0";
+                                this.grid[other.coords.row()+i][other.coords.col()] = "1";
+                            }
+                            this.coords = new Coordinates(other.coords.row() + 1, other.coords.col());
+                            this.tipped = true;
+                        } else {
+                            this.coords = new Coordinates(other.coords.row() + 1, other.coords.col());
+                            this.tipped = false;
                         }
-                        this.coords = new Coordinates(other.coords.row() + 1, other.coords.col());
                     }
                     else {
-                        this.coords = new Coordinates(other.coords.row() + other.height, other.coords.col());
+                        this.coords = new Coordinates(other.coords.row() + 1, other.coords.col());
+                        this.tipped = false;
                     }
+                }
+                else if (other.coords.row() + 1 < width) {
+                    this.coords = new Coordinates(other.coords.row() + 1, other.coords.col());
+                    this.tipped = false;
                 }
             }
             case "West" -> {
-                if(other.coords.col() - other.height >= 0) {
+                if (other.coords.col() - other.height >= 0) {
                     if (other.height > 1) {
-                        for (int i = 1; i < other.height + 1; i++) {
-                            this.grid[other.coords.row()][other.coords.col()] = "0";
-                            this.grid[other.coords.row()][other.coords.col()-i] = "1";
+                        if (this.grid[other.coords.row()][other.coords.col() - 1].equals("0")) {
+                            for (int i = 1; i < other.height + 1; i++) {
+                                this.grid[other.coords.row()][other.coords.col()] = "0";
+                                this.grid[other.coords.row()][other.coords.col() - i] = "1";
+                            }
+                            this.coords = new Coordinates(other.coords.row(), other.coords.col() - 1);
+                            this.tipped = true;
+                        } else {
+                            this.coords = new Coordinates(other.coords.row(), other.coords.col() - 1);
+                            this.tipped = false;
                         }
-                        this.coords = new Coordinates(other.coords.row(),other.coords.col() - 1);
                     }
                     else {
-                        this.coords = new Coordinates(other.coords.row(), other.coords.col() - other.height);
+                        this.coords = new Coordinates(other.coords.row(), other.coords.col() - 1);
+                        this.tipped = false;
                     }
+                }
+                else if (other.coords.col() - 1 >= 0) {
+                    this.coords = new Coordinates(other.coords.row(), other.coords.col() - 1);
+                    this.tipped = false;
                 }
             }
         }
         this.height = Integer.parseInt(this.grid[coords.row()][coords.col()]);
+    }
+
+    public boolean tipped() {
+        return tipped;
     }
 
     @Override
@@ -147,6 +198,26 @@ public class TipOverConfig implements Configuration {
     }
 
     @Override
+    public void addTotals() {
+        total++;
+    }
+
+    @Override
+    public void addUnique() {
+        unique++;
+    }
+
+    @Override
+    public int returnTotal() {
+        return total;
+    }
+
+    @Override
+    public int returnUnique() {
+        return unique;
+    }
+
+    @Override
     public boolean equals(Object o) {
         boolean result = false;
         if(o instanceof TipOverConfig) {
@@ -161,6 +232,10 @@ public class TipOverConfig implements Configuration {
             result = this.coords.equals(n.coords);
         }
         return result;
+    }
+
+    public int getHeight() {
+        return this.height;
     }
 
     @Override
