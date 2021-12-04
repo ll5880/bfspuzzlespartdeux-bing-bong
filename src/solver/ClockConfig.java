@@ -8,6 +8,8 @@ public class ClockConfig implements Configuration {
     private static int hours, end;
     // Start time
     private int start;
+    private int total = 1;
+    private int unique = 1;
 
     /**
      * Creates a Clock Config
@@ -63,6 +65,26 @@ public class ClockConfig implements Configuration {
         neighbors.add(prev);
         neighbors.add(next);
         return neighbors;
+    }
+
+    @Override
+    public void addTotals() {
+        total++;
+    }
+
+    @Override
+    public void addUnique() {
+        unique++;
+    }
+
+    @Override
+    public int returnTotal() {
+        return total;
+    }
+
+    @Override
+    public int returnUnique() {
+        return unique;
     }
 
     /**

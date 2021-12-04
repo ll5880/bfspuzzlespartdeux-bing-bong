@@ -22,8 +22,6 @@ public class Solver {
         List<Configuration> path = new LinkedList<>();
 
         //counters for total configs
-        int total = 1;
-        int unique = 1;
 
         // add initial configs to queue and map to store and later trace back to.
         queue.add(config);
@@ -43,8 +41,6 @@ public class Solver {
                 if (node != null) {
                     path.add(0, config);
                 }
-                System.out.println("Total Configs: " + total);
-                System.out.println("Unique Configs: " + unique);
                 return path;
             }
             // get the neighbor of configs to store in queue and map if current config is not the solution
@@ -52,17 +48,15 @@ public class Solver {
                 if (!predecessors.containsKey(nbr)) {
                     predecessors.put(nbr, current);
                     queue.offer(nbr);
-                    total++;
-                    unique++;
+                    config.addTotals();
+                    config.addUnique();
                 }
                 else {
-                    total++;
+                    config.addTotals();
                 }
             }
         }
         // print configs
-        System.out.println("Total Configs: " + total);
-        System.out.println("Unique Configs: " + unique);
         return path;
     }
 }

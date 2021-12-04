@@ -3,7 +3,7 @@
     <option name="INCLUDE_PROVIDED_SCOPE" value="true" />
     <option name="MAIN_CLASS_NAME" value="puzzles.tipover.TipOver" />
     <module name="BFSPuzzles" />
-    <option name="PROGRAM_PARAMETERS" value="data/tipover/tipover-1.txt" />
+    <option name="PROGRAM_PARAMETERS" value="data/tipover/tipover-a.txt" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="puzzles.tipover.model.*" />

@@ -32,4 +32,8 @@ public interface Configuration {
      * @return Hashset of Configurations
      */
     Set<Configuration> getNeighbors();
+    void addTotals();
+    void addUnique();
+    int returnTotal();
+    int returnUnique();
 }
