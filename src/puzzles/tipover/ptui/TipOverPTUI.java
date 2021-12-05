@@ -7,7 +7,7 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 /**
- * DESCRIPTION
+ * Creates a text based version of the tip over game
  * @author YOUR NAME HERE
  * November 2021
  */
@@ -20,7 +20,7 @@ public class TipOverPTUI implements Observer<TipOverModel, Object>{
         initializeView();
     }
 
-    public void run() throws FileNotFoundException {
+    public void run(){
         this.model.show();
         System.out.println("File Loaded");
         Scanner in = new Scanner(System.in);
@@ -34,10 +34,30 @@ public class TipOverPTUI implements Observer<TipOverModel, Object>{
                 } else if (fields[0].startsWith("m")) {
                     if (fields[0].equals("move")) {
                         switch (fields[1]) {
-                            case "north" -> this.model.getNorth();
-                            case "east" -> this.model.getEast();
-                            case "south" -> this.model.getSouth();
-                            case "west" -> this.model.getWest();
+                            case "north" -> {
+                                this.model.getNorth();
+                                if (!model.isTipped() && !this.model.getConfig().isSolution()) {
+                                    this.model.show();
+                                }
+                            }
+                            case "east" -> {
+                                this.model.getEast();
+                                if (!model.isTipped() && !this.model.getConfig().isSolution()) {
+                                    this.model.show();
+                                }
+                            }
+                            case "south" -> {
+                                this.model.getSouth();
+                                if (!model.isTipped() && !this.model.getConfig().isSolution()) {
+                                    this.model.show();
+                                }
+                            }
+                            case "west" -> {
+                                this.model.getWest();
+                                if (!model.isTipped() && !this.model.getConfig().isSolution()) {
+                                    this.model.show();
+                                }
+                            }
                             default -> {
                                 System.out.println("Illegal Command");
                                 this.displayHelp();
@@ -53,6 +73,9 @@ public class TipOverPTUI implements Observer<TipOverModel, Object>{
                         this.displayHelp();
                     } else if (fields[0].equals("hint")) {
                         this.model.getHint();
+                        if (!model.isTipped()) {
+                            this.model.show();
+                        }
                     } else {
                         System.out.println("Illegal Command");
                         this.displayHelp();
@@ -60,10 +83,12 @@ public class TipOverPTUI implements Observer<TipOverModel, Object>{
                 } else if (fields[0].startsWith("r")) {
                     if (fields[0].equals("reload")) {
                         this.model.reload();
+                        this.model.show();
                     }
                 } else if (fields[0].startsWith("l")) {
                     try {
                         model.loadNew(fields[1]);
+                        this.model.show();
                     }
                     catch (FileNotFoundException e) {
                         System.out.println("File Not Found");
@@ -76,12 +101,15 @@ public class TipOverPTUI implements Observer<TipOverModel, Object>{
     @Override
     public void update(TipOverModel o, Object o2) {
         if (this.model.getConfig().isSolution()) {
+            this.model.show();
             System.out.println("YOU WON");
         }
         if (this.model.isTipped()) {
+            this.model.show();
             System.out.println("A tower has been tipped over");
         }
         if (!this.model.isSolvable()) {
+            System.out.println("Unsolvable Board");
             System.out.println("Reload or Pick a New Board");
         }
     }

@@ -8,136 +8,166 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * DESCRIPTION
- * @author YOUR NAME HERE
+ * Creates a model to be displayed
+ * @author Darian Cheung
  * November 2021
  */
 public class TipOverModel{
 
+    // information to make the configs
     private String filename;
     private boolean tipped;
-    private TipOverConfig config;
+    public TipOverConfig config;
+    public TipOverConfig startConfig;
     private List<Configuration> path;
     private List< Observer< TipOverModel, Object > > observers;
     private boolean solvable = true;
 
+    /**
+     * Creates Model
+     * @param filename
+     * @throws FileNotFoundException
+     */
     public TipOverModel(String filename) throws FileNotFoundException {
         this.observers = new LinkedList<>();
         this.filename = filename;
         this.config = new TipOverConfig(this.filename);
+        this.startConfig = new TipOverConfig(this.filename);
         this.path = Solver.solve(this.config);
     }
 
+    /**
+     * Returns tipped
+     * @return tipped
+     */
     public boolean isTipped() {
         return tipped;
     }
 
+    /**
+     * Returns current config
+     * @return config
+     */
     public Configuration getConfig() {
         return this.config;
     }
 
+    /**
+     * Displays config
+     */
     public void show() {
         System.out.println(this.config);
     }
 
-    public void reload() throws FileNotFoundException {
-        this.config = new TipOverConfig(this.filename);
-        this.show();
+    /**
+     * Sets config to initial state
+     */
+    public void reload() {
+        tipped = false;
+        solvable = true;
+        this.config = startConfig;
+        this.announce(null);
     }
 
+    /**
+     * Loads new config
+     * @param filename file of new game
+     * @throws FileNotFoundException
+     */
     public void loadNew(String filename) throws FileNotFoundException {
         this.filename = filename;
+        this.startConfig = new TipOverConfig(this.filename);
         this.config = new TipOverConfig(this.filename);
-        this.show();
+        this.announce(null);
     }
 
-    public Configuration getNorth() {
+    /**
+     * Returns north config of current
+     */
+    public void getNorth() {
         TipOverConfig temp = new TipOverConfig(this.config, "Current");
         this.config = new TipOverConfig(this.config, "North");
         if (this.config.getHeight() >= 1) {
-            this.show();
             tipped = this.config.tipped();
             this.announce(null);
-            return this.config;
         }
         else {
             this.config = temp;
-            this.show();
             this.announce(null);
-            return this.config;
         }
     }
 
-    public Configuration getEast() {
+    /**
+     * Returns east config od current
+     */
+    public void getEast() {
         TipOverConfig temp = new TipOverConfig(this.config, "Current");
         this.config = new TipOverConfig(this.config, "East");
         if (this.config.getHeight() >= 1) {
-            this.show();
             tipped = this.config.tipped();
             this.announce(null);
-            return this.config;
         }
         else {
             this.config = temp;
-            this.show();
             this.announce(null);
-            return this.config;
         }
     }
-    public Configuration getSouth() {
+
+    /**
+     * Returns south config of current
+     */
+    public void getSouth() {
         TipOverConfig temp = new TipOverConfig(this.config, "Current");
         this.config = new TipOverConfig(this.config, "South");
         if (this.config.getHeight() >= 1) {
-            this.show();
             tipped = this.config.tipped();
             this.announce(null);
-            return this.config;
         }
         else {
             this.config = temp;
-            this.show();
             this.announce(null);
-            return this.config;
         }
     }
-    public Configuration getWest() {
+
+    /**
+     * Returns west config of current
+     * */
+    public void getWest() {
         TipOverConfig temp = new TipOverConfig(this.config, "Current");
         this.config = new TipOverConfig(this.config, "West");
         if (this.config.getHeight() >= 1) {
-            this.show();
             tipped = this.config.tipped();
             this.announce(null);
-            return this.config;
         }
         else {
             this.config = temp;
-            this.show();
             this.announce(null);
-            return this.config;
         }
     }
 
-    public Configuration getHint() {
+    /**
+     * Returns the next step
+     */
+    public void getHint() {
         this.path = Solver.solve(this.config);
         if (this.path.size() > 1) {
-            this.config = (TipOverConfig) path.get(1);
             if (this.config.getHeight() > 1) {
-                this.show();
-                this.announce(null);
                 tipped = true;
             } else if (this.config.getHeight() == 1) {
-                this.show();
-                this.announce(null);
                 tipped = false;
             }
         } else {
-            System.out.println("Unsolvable Board");
             solvable = false;
             this.announce(null);
         }
-        return this.config;
+        this.config = (TipOverConfig) path.get(1);
+        this.announce(null);
     }
 
+    /**
+     * Returns if the grid is solvable
+     * @return solvable
+     */
     public boolean isSolvable() {
         return solvable;
     }
