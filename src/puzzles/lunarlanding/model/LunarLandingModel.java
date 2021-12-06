@@ -20,6 +20,8 @@ public class LunarLandingModel {
     private Solver solver;
     private String figure;
     private int hintPath = 0;
+    private boolean figureMoved;
+    private boolean solvable;
 
     private List< Observer< LunarLandingModel, Object > > observers;
 
@@ -41,6 +43,7 @@ public class LunarLandingModel {
         currentConfig = new LunarLandingConfig(filename);
         solver = new Solver();
         figure = null;
+        figureMoved = false;
 
     }
 
@@ -56,6 +59,7 @@ public class LunarLandingModel {
     public void reload() {
         this.currentConfig = new LunarLandingConfig(this.filename);
         System.out.println(currentConfig);
+        solvable = true;
     }
 
     public void choose(int row, int col) {
@@ -72,49 +76,47 @@ public class LunarLandingModel {
                     case "north":
                         if (this.currentConfig.canMove(figure, direction).equals("North")) {
                             currentConfig.setFigure(figure, this.currentConfig.MoveNorth(figure));
-                            System.out.println(currentConfig);
-                            if (currentConfig.isSolution()) {
-                                System.out.println("I WON!");
-                            }
+                            announce(null);
+                            figureMoved = true;
+                            //return currentConfig;
                         } else {
                             System.out.println("illegal move");
+                            figureMoved = false;
                         }
                         break;
                     case "south":
                         if (this.currentConfig.canMove(figure, direction).equals("South")) {
                             currentConfig.setFigure(figure, this.currentConfig.MoveSouth(figure));
-                            System.out.println(currentConfig);
-                            if (currentConfig.isSolution()) {
-                                System.out.println("I WON!");
-                            }
+                            announce("fun");
+                            figureMoved = true;
                         } else {
                             System.out.println("illegal move");
+                            figureMoved = false;
                         }
                         break;
                     case "east":
                         if (this.currentConfig.canMove(figure, direction).equals("East")) {
                             currentConfig.setFigure(figure, this.currentConfig.MoveEast(figure));
-                            System.out.println(currentConfig);
-                            if (currentConfig.isSolution()) {
-                                System.out.println("I WON!");
-                            }
+                            announce("fun");
+                            figureMoved = true;
                         } else {
                             System.out.println("illegal move");
+                            figureMoved = false;
                         }
                         break;
                     case "west":
                         if (this.currentConfig.canMove(figure, direction).equals("West")) {
                             currentConfig.setFigure(figure, this.currentConfig.MoveWest(figure));
-                            System.out.println(currentConfig);
-                            if (currentConfig.isSolution()) {
-                                System.out.println("I WON!");
-                            }
+                            announce("fun");
+                            figureMoved = true;
                         } else {
                             System.out.println("illegal move");
+                            figureMoved = false;
                         }
                         break;
                     default:
                         System.out.println("illegal command");
+                        figureMoved = false;
                         break;
                 }
             }
@@ -132,9 +134,11 @@ public class LunarLandingModel {
         if (currentConfig.isSolution()) {
             announce("I WON!");
         } else if (solution.size() == 0) {
+            solvable = false;
             announce("Unsolvable board");
         } else {
             currentConfig = (LunarLandingConfig) solution.remove(1);
+            announce(null);
         }
     }
 
@@ -154,8 +158,20 @@ public class LunarLandingModel {
         System.out.println( "help                              -- show all commands" );
     }
 
+    public boolean getFigureMoved() {
+        return figureMoved;
+    }
+
+    public boolean isSolvable() {
+        return solvable;
+    }
+
     public LunarLandingConfig getCurrentConfig () {
         return currentConfig;
+    }
+
+    public String getFilename() {
+        return filename;
     }
 
     /**

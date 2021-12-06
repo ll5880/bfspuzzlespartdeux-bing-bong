@@ -2,26 +2,29 @@ package puzzles.lunarlanding.ptui;
 
 import puzzles.lunarlanding.model.LunarLandingConfig;
 import puzzles.lunarlanding.model.LunarLandingModel;
+import puzzles.tipover.model.Observer;
 import solver.Configuration;
 import solver.Solver;
-import util.Observer;
 
 import java.io.FileNotFoundException;
+import java.util.List;
 import java.util.Scanner;
 
 /**
- * Class defintion for the textual view and controller
+ * Class definition for the textual view and controller
  *
  * @author Lucie Lim
  * November 2021
  */
-public class LunarLandingPTUI {
+public class LunarLandingPTUI implements Observer< LunarLandingModel, Object > {
 
     private LunarLandingModel model;
     private boolean chosenFigure = false;
 
-    public LunarLandingPTUI(String file) {
-        this.model = new LunarLandingModel(file);
+    public LunarLandingPTUI(String arg) {
+        this.model = new LunarLandingModel(arg);
+        this.model.load(arg);
+//        initializeView();
     }
 
     //Controller
@@ -31,8 +34,7 @@ public class LunarLandingPTUI {
      */
     private void run() {
             Scanner in = new Scanner(System.in);
-            this.model.show();
-            System.out.println("File loaded");
+            //System.out.println("File loaded");
             for (; ; ) {
                 System.out.print("game command: ");
                 String line = in.nextLine();
@@ -81,6 +83,25 @@ public class LunarLandingPTUI {
         }
 
     //view
+    @Override
+    public void update(LunarLandingModel lunarLandingModel, Object o) {
+        if (this.model.getCurrentConfig().isSolution()) {
+            model.show();
+            System.out.println("You win");
+        }
+        //if a figure has been moved
+        if (this.model.getFigureMoved()) {
+            model.show();
+        } else {
+            System.out.println("Test");
+        }
+
+        //if a board is not solvable
+        if (!this.model.isSolvable()) {
+            System.out.println("Unsolvable board");
+            System.out.println("pick new board");
+        }
+    }
 
     /**
      * Initialize the view
@@ -90,25 +111,15 @@ public class LunarLandingPTUI {
 //        update( this.model, null );
 //    }
 
-//    public void update( ConcentrationModel o, Object arg ) {
-//        // if arg is not null, it means the user wants to get the "cheat" board
-//        // with all cards face up
-//        displayBoard( this.model.getMoveCount(),
-//                this.model.howManyCardsUp(),
-//                arg == null ? this.model.getCards()
-//                        : this.model.getCheat(),
-//                false
-//        );
-//
-//        // display a win if all cards are face up (not cheating)
-//        if ( this.model.getCards().stream()
-//                .allMatch( face -> face.isFaceUp() ) ) {
-//            System.out.println( "YOU WIN!" );
-//        }
-//    }
+    public void initializeView(){
+        this.model.addObserver(this);
+        update(this.model, null);
+
+    }
 
     public static void main( String[] args ) {
         LunarLandingPTUI ptui = new LunarLandingPTUI(args[0]);
         ptui.run();
     }
+
 }

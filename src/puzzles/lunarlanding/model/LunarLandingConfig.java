@@ -370,6 +370,14 @@ public class LunarLandingConfig implements Configuration {
         return column;
     }
 
+    public Coordinates getLunarLanderCoordinates() {
+        return lunarLanderCoordinates;
+    }
+
+    public HashMap<String, Coordinates> getFigures() {
+        return figures;
+    }
+
     /**
      * Returns the string representation of the puzzle
      */
