@@ -14,7 +14,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import puzzles.tipover.model.Observer;
+import puzzles.tipover.model.TipOverObserver;
 import puzzles.tipover.model.TipOverConfig;
 import puzzles.tipover.model.TipOverModel;
 import java.io.FileNotFoundException;
@@ -25,7 +25,7 @@ import java.io.FileNotFoundException;
  * November 2021
  */
 public class TipOverGUI extends Application
-        implements Observer<TipOverModel, Object> {
+        implements TipOverObserver<TipOverModel, Object> {
 
     private static TipOverModel model;
     private GridPane gridPane;

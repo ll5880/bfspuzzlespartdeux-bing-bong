@@ -20,7 +20,7 @@ public class TipOverModel{
     public TipOverConfig config;
     public TipOverConfig startConfig;
     private List<Configuration> path;
-    private List< Observer< TipOverModel, Object > > observers;
+    private List< TipOverObserver< TipOverModel, Object > > observers;
     private boolean solvable = true;
 
     /**
@@ -175,10 +175,10 @@ public class TipOverModel{
     /**
      * Add a new observer to the list for this model
      * @param obs an object that wants an
-     *            {@link Observer#update(Object, Object)}
+     *            {@link TipOverObserver#update(Object, Object)}
      *            when something changes here
      */
-    public void addObserver( Observer< TipOverModel, Object > obs ) {
+    public void addObserver( TipOverObserver< TipOverModel, Object > obs ) {
         this.observers.add( obs );
     }
 

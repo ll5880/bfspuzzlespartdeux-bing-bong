@@ -1,7 +1,7 @@
 package puzzles.tipover.ptui;
 
 import puzzles.tipover.model.*;
-import puzzles.tipover.model.Observer;
+import puzzles.tipover.model.TipOverObserver;
 
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -11,7 +11,7 @@ import java.util.Scanner;
  * @author YOUR NAME HERE
  * November 2021
  */
-public class TipOverPTUI implements Observer<TipOverModel, Object>{
+public class TipOverPTUI implements TipOverObserver<TipOverModel, Object>{
 
     private TipOverModel model;
 

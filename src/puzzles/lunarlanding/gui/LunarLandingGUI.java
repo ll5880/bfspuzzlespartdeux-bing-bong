@@ -13,6 +13,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import puzzles.lunarlanding.model.LunarLandingModel;
+import puzzles.lunarlanding.model.LunarObserver;
 import util.Coordinates;
 import util.Grid;
 import util.Observer;
@@ -28,7 +29,7 @@ import java.util.Objects;
  * November 2021
  */
 public class LunarLandingGUI extends Application
-        implements Observer< LunarLandingModel, Object > {
+        implements LunarObserver< LunarLandingModel, Object > {
 
     private LunarLandingModel model;
     private GridPane MainGridPane;

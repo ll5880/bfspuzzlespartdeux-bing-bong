@@ -3,7 +3,6 @@ package puzzles.lunarlanding.model;
 import solver.Configuration;
 import solver.Solver;
 import util.Coordinates;
-import util.Observer;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -23,7 +22,7 @@ public class LunarLandingModel {
     private boolean figureMoved;
     private boolean solvable;
 
-    private List< Observer< LunarLandingModel, Object > > observers;
+    private List< LunarObserver< LunarLandingModel, Object > > observers;
 
     /*
      * Code here includes...
@@ -177,10 +176,10 @@ public class LunarLandingModel {
     /**
      * Add a new observer to the list for this model
      * @param obs an object that wants an
-     *            {@link Observer#update(Object, Object)}
+     *            {@link LunarObserver#update(Object, Object)}
      *            when something changes here
      */
-    public void addObserver( Observer< LunarLandingModel, Object > obs ) {
+    public void addObserver( LunarObserver< LunarLandingModel, Object > obs ) {
         this.observers.add( obs );
     }
 

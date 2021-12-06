@@ -2,7 +2,8 @@ package puzzles.lunarlanding.ptui;
 
 import puzzles.lunarlanding.model.LunarLandingConfig;
 import puzzles.lunarlanding.model.LunarLandingModel;
-import puzzles.tipover.model.Observer;
+import puzzles.lunarlanding.model.LunarObserver;
+import puzzles.tipover.model.TipOverObserver;
 import solver.Configuration;
 import solver.Solver;
 
@@ -16,7 +17,7 @@ import java.util.Scanner;
  * @author Lucie Lim
  * November 2021
  */
-public class LunarLandingPTUI implements Observer< LunarLandingModel, Object > {
+public class LunarLandingPTUI implements LunarObserver<LunarLandingModel, Object> {
 
     private LunarLandingModel model;
     private boolean chosenFigure = false;
@@ -24,7 +25,7 @@ public class LunarLandingPTUI implements Observer< LunarLandingModel, Object > {
     public LunarLandingPTUI(String arg) {
         this.model = new LunarLandingModel(arg);
         this.model.load(arg);
-//        initializeView();
+        initializeView();
     }
 
     //Controller
