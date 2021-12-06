@@ -134,7 +134,6 @@ public class LunarLandingConfig implements Configuration {
          figures.put(figure, coords);
          board.set(figure, figures.get(figure).row(), figures.get(figure).col());
          board.set("_", oldcords.row(), oldcords.col());
-
      }
 
     /**

@@ -18,9 +18,10 @@ public class LunarLandingModel {
     private String filename;
     private Solver solver;
     private String figure;
-    private int hintPath = 0;
     private boolean figureMoved;
     private boolean solvable;
+    private boolean solved;
+    private boolean loaded;
 
     private List< LunarObserver< LunarLandingModel, Object > > observers;
 
@@ -43,6 +44,8 @@ public class LunarLandingModel {
         solver = new Solver();
         figure = null;
         figureMoved = false;
+        loaded = true;
+        solved = false;
 
     }
 
@@ -51,21 +54,34 @@ public class LunarLandingModel {
         if (!currentConfig.getExceptionCaught()) {
             this.filename = file;
             show();
-            System.out.println("File loaded");
+            announce("File loaded");
         }
     }
 
     public void reload() {
         this.currentConfig = new LunarLandingConfig(this.filename);
         System.out.println(currentConfig);
-        solvable = true;
+        announce("File loaded");
+        loaded = true;
+        solved = false;
     }
 
     public void choose(int row, int col) {
         figure = this.currentConfig.find(new Coordinates(row, col));
         if (figure == null){
-            System.out.println("No figure at that position");
+            announce("No figure at that position");
         }
+        loaded = false;
+    }
+
+    public void choose(int position) {
+        int r = position / currentConfig.getRow();
+        int c = position - (r * currentConfig.getRow());
+        figure = this.currentConfig.find(new Coordinates(r, c));
+        if (figure == null){
+            announce("No figure at that position");
+        }
+        loaded = false;
     }
 
     public void go (String go, String direction) {
@@ -73,71 +89,92 @@ public class LunarLandingModel {
             if (go.equals("go")) {
                 switch (direction) {
                     case "north":
+                        System.out.println(currentConfig);
                         if (this.currentConfig.canMove(figure, direction).equals("North")) {
                             currentConfig.setFigure(figure, this.currentConfig.MoveNorth(figure));
-                            announce(null);
+                            announce("");
+                            show();
                             figureMoved = true;
-                            //return currentConfig;
+                            if (this.currentConfig.isSolution()) {
+                                announce("You Win");
+                            }
                         } else {
-                            System.out.println("illegal move");
+                            announce("illegal move");
                             figureMoved = false;
                         }
                         break;
                     case "south":
                         if (this.currentConfig.canMove(figure, direction).equals("South")) {
                             currentConfig.setFigure(figure, this.currentConfig.MoveSouth(figure));
-                            announce("fun");
+                            announce("");
+                            show();
                             figureMoved = true;
+                            if (this.currentConfig.isSolution()) {
+                                announce("You Win");
+                            }
                         } else {
-                            System.out.println("illegal move");
+                            announce("illegal move");
                             figureMoved = false;
                         }
                         break;
                     case "east":
                         if (this.currentConfig.canMove(figure, direction).equals("East")) {
                             currentConfig.setFigure(figure, this.currentConfig.MoveEast(figure));
-                            announce("fun");
+                            announce("");
+                            show();
                             figureMoved = true;
+                            if (this.currentConfig.isSolution()) {
+                                announce("You Win");
+                            }
                         } else {
-                            System.out.println("illegal move");
+                            announce("illegal move");
                             figureMoved = false;
                         }
                         break;
                     case "west":
                         if (this.currentConfig.canMove(figure, direction).equals("West")) {
                             currentConfig.setFigure(figure, this.currentConfig.MoveWest(figure));
-                            announce("fun");
+                            announce("");
+                            show();
                             figureMoved = true;
+                            if (this.currentConfig.isSolution()) {
+                                announce("You Win");
+                            }
                         } else {
-                            System.out.println("illegal move");
+                            announce("illegal move");
                             figureMoved = false;
                         }
                         break;
                     default:
-                        System.out.println("illegal command");
+                        announce("illegal command");
                         figureMoved = false;
                         break;
                 }
             }
             else {
-                System.out.println("illegal command" + "\n" + "Legal commands are...\n");
+                announce("illegal command" + "\n" + "Legal commands are...\n");
                 Help();
             }
         }
+        loaded = false;
     }
 
-    //uses solve to get the next config, changes the current config to the next
-    //config
     public void hint () {
         List<Configuration> solution = Solver.solve(currentConfig);
-        if (currentConfig.isSolution()) {
-            announce("I WON!");
-        } else if (solution.size() == 0) {
-            solvable = false;
+        if (isSolvable() == false) {
             announce("Unsolvable board");
         } else {
-            currentConfig = (LunarLandingConfig) solution.remove(1);
-            announce(null);
+            solvable = true;
+            if (solution.size() > 1) {
+                currentConfig = (LunarLandingConfig) solution.remove(1);
+                show();
+                announce("");
+                if (currentConfig.isSolution()) {
+                    announce("You Win!");
+                }
+            } else {
+                announce("Board is already solved");
+            }
         }
     }
 
@@ -162,15 +199,19 @@ public class LunarLandingModel {
     }
 
     public boolean isSolvable() {
-        return solvable;
+        List<Configuration> solution = Solver.solve(currentConfig);
+        if (solution.size() == 0) {
+            return false;
+        }
+        return true;
     }
 
     public LunarLandingConfig getCurrentConfig () {
         return currentConfig;
     }
 
-    public String getFilename() {
-        return filename;
+    public boolean isLoaded() {
+        return loaded;
     }
 
     /**

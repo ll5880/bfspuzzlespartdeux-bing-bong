@@ -21,6 +21,7 @@ public class LunarLandingPTUI implements LunarObserver<LunarLandingModel, Object
 
     private LunarLandingModel model;
     private boolean chosenFigure = false;
+    private boolean reachedSolution = false;
 
     public LunarLandingPTUI(String arg) {
         this.model = new LunarLandingModel(arg);
@@ -34,8 +35,7 @@ public class LunarLandingPTUI implements LunarObserver<LunarLandingModel, Object
      * Read a command and execute loop.
      */
     private void run() {
-            Scanner in = new Scanner(System.in);
-            //System.out.println("File loaded");
+        Scanner in = new Scanner(System.in);
             for (; ; ) {
                 System.out.print("game command: ");
                 String line = in.nextLine();
@@ -48,6 +48,8 @@ public class LunarLandingPTUI implements LunarObserver<LunarLandingModel, Object
                     //reload
                     else if (words[0].startsWith("r")) {
                         this.model.reload();
+                        //reload a puzzle = solution not reached
+                        reachedSolution = false;
                     }
                     //choose
                     else if (words[0].startsWith("c")) {
@@ -57,12 +59,15 @@ public class LunarLandingPTUI implements LunarObserver<LunarLandingModel, Object
                     //load
                     else if (words[0].startsWith("l")) {
                         this.model.load(words[1]);
+                        reachedSolution = false;
                     }
                     //go
                     else if (words[0].startsWith("g")) {
                         if (chosenFigure) {
+                            reachedSolution = false;
                             this.model.go(words[0], words[1]);
                             chosenFigure = false;
+
                         } else {
                             System.out.println("Choose a character to move first");
                         }
@@ -70,7 +75,6 @@ public class LunarLandingPTUI implements LunarObserver<LunarLandingModel, Object
                     //hint
                     else if (words[0].equals("hint")) {
                         this.model.hint();
-                        this.model.show();
                     }
                     //show
                     else if (words[0].startsWith("s")) {
@@ -86,35 +90,27 @@ public class LunarLandingPTUI implements LunarObserver<LunarLandingModel, Object
     //view
     @Override
     public void update(LunarLandingModel lunarLandingModel, Object o) {
-        if (this.model.getCurrentConfig().isSolution()) {
-            model.show();
-            System.out.println("You win");
-        }
-        //if a figure has been moved
-        if (this.model.getFigureMoved()) {
-            model.show();
-        } else {
-            System.out.println("Test");
+        //the hint method
+        if (o != null){
+            System.out.println(o);
         }
 
-        //if a board is not solvable
-        if (!this.model.isSolvable()) {
-            System.out.println("Unsolvable board");
-            System.out.println("pick new board");
-        }
+        //if a figure has been moved
+//        if (this.model.getFigureMoved()) {
+//            this.model.show();
+//            reachedSolution = false;
+//        }
+
+
+
     }
 
     /**
      * Initialize the view
      */
-//    public void initializeView() {
-//        this.model.addObserver( this );
-//        update( this.model, null );
-//    }
-
     public void initializeView(){
         this.model.addObserver(this);
-        update(this.model, null);
+        update(this.model, "");
 
     }
 
