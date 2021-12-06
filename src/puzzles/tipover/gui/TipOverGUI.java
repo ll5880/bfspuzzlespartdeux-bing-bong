@@ -27,10 +27,14 @@ import java.io.FileNotFoundException;
 public class TipOverGUI extends Application
         implements TipOverObserver<TipOverModel, Object> {
 
+    // model to be displayed
     private static TipOverModel model;
+    // grid
     private GridPane gridPane;
+    // text above the grid
     private Label top;
 
+    // all images for the buttons
     private final Image zero = new Image(getClass().getResourceAsStream("resources/0.png"), 50, 50, false, false);
     private final Image one = new Image(getClass().getResourceAsStream("resources/1.png"), 50, 50, false, false);
     private final Image two = new Image(getClass().getResourceAsStream("resources/2.png"), 50, 50, false, false);
@@ -48,7 +52,9 @@ public class TipOverGUI extends Application
     private final Image left = new Image(getClass().getResourceAsStream("resources/leftarrow.png"), 50, 50, false, false);
     private final Image star = new Image(getClass().getResourceAsStream("resources/star.png"), 50, 50, false, false);
 
-
+    /**
+     * Class that takes in the value in each grid and sets appropriate image
+     */
     private class NumberedButtons extends Button{
         private Image image;
 
@@ -70,21 +76,29 @@ public class TipOverGUI extends Application
         }
     }
 
+    /**
+     * Start function, creates the window with grid, text, and buttons
+     * @param stage
+     */
     @Override
     public void start( Stage stage ) {
 
+        // border pane to insert grid pane and text labels
         BorderPane borderPane = new BorderPane();
         top = new Label("Loaded Game, Standing on a " + model.config.grid[model.config.coords.row()][model.config.coords.col()]);
         borderPane.setTop(top);
 
         borderPane.setPrefSize(800, 400);
 
+        // sets the center
         gridPane = makeGrid();
         borderPane.setCenter(gridPane);
 
+        // sets the right side
         GridPane side = makeSide();
         borderPane.setRight(side);
 
+        // creates button to load new files
         final FileChooser fileChooser = new FileChooser();
         Button load = new Button("Load");
         load.setOnAction(
@@ -96,17 +110,24 @@ public class TipOverGUI extends Application
                 });
         side.add(load, 2, 3);
 
+        // sets scene
         Scene scene = new Scene(borderPane);
         stage.setTitle("Tip Over");
         stage.setScene(scene);
         stage.show();
     }
 
+    /**
+     * Creates a gridPane based off of the model
+     * @return gridPae
+     */
     public GridPane makeGrid() {
         GridPane gridPane = new GridPane();
         for (int row = 0; row < TipOverConfig.width; row++) {
             for (int col = 0; col < TipOverConfig.length; col++) {
                 NumberedButtons button;
+                // creates buttons with the number at the current coordinates, if it's the goal, it's a star
+                // if it's the current, it's the tipper
                 if (model.config.coords.row() == row && model.config.coords.col() == col) {
                     button = new NumberedButtons(-1);
                     button.setGraphic(new ImageView(button.image));
@@ -125,6 +146,10 @@ public class TipOverGUI extends Application
         return gridPane;
     }
 
+    /**
+     * creates the side buttons, holding the arrow keys and reset and hint buttons
+     * @return grid pane
+     */
     public GridPane makeSide() {
         GridPane gridPane = new GridPane();
         for (int row = 0; row < 4; row++) {
@@ -172,6 +197,11 @@ public class TipOverGUI extends Application
         return gridPane;
     }
 
+    /**
+     * Updates the screen after the buttons will update the model
+     * @param tipOverModel
+     * @param o
+     */
     @Override
     public void update( TipOverModel tipOverModel, Object o ) {
         for (int row = 0; row < TipOverConfig.width; row++) {
@@ -192,6 +222,7 @@ public class TipOverGUI extends Application
                 gridPane.add(button, col, row);
             }
         }
+        // status texts, like victory text and such
         if (model.config.coords.equals(TipOverConfig.goal)) {
             top.setText("YOU WON");
         }
@@ -217,11 +248,15 @@ public class TipOverGUI extends Application
     }
 
     @Override
-    public void init() throws Exception {
+    public void init(){
         model.addObserver(this);
         System.out.println("init: Initialize and connect to model!");
     }
 
+    /**
+     * opens the file and loads it, updating the model/grid
+     * @param file
+     */
     private void openFile(File file) {
         try {
             this.gridPane.getChildren().clear();
