@@ -152,15 +152,16 @@ public class TipOverModel{
         this.path = Solver.solve(this.config);
         if (this.path.size() > 1) {
             if (this.config.getHeight() > 1) {
+                this.config = (TipOverConfig) path.get(1);
                 tipped = true;
             } else if (this.config.getHeight() == 1) {
+                this.config = (TipOverConfig) path.get(1);
                 tipped = false;
             }
         } else {
             solvable = false;
             this.announce(null);
         }
-        this.config = (TipOverConfig) path.get(1);
         this.announce(null);
     }
 
