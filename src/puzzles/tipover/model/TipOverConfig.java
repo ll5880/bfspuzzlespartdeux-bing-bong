@@ -7,25 +7,35 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 /**
- * DESCRIPTION
- * @author YOUR NAME HERE
+ * Creates a configuration that holds the board info and the coordinates of the tipper and goal
+ * @author Darian Cheung, Team bingbong
  * November 2021
  */
 
 public class TipOverConfig implements Configuration {
 
-    private String[][] grid;
-    private static int width;
-    private static int length;
+    // Dimensions of the grid
+    public String[][] grid;
+    public static int width;
+    public static int length;
 
+    // height of tower, if it's tipped or not
     private int height;
     private boolean tipped;
 
-    private Coordinates coords;
-    private static Coordinates goal;
+    // coords of goal and tipper
+    public Coordinates coords;
+    public static Coordinates goal;
+
+    // number of configs ran
     private int total = 1;
     private int unique = 1;
 
+    /**
+     * Creates initial TipOverConfig
+     * @param filename data creates grid
+     * @throws FileNotFoundException
+     */
     public TipOverConfig(String filename) throws FileNotFoundException {
         try (Scanner in = new Scanner(new File(filename))) {
             in.hasNextLine();
@@ -50,7 +60,13 @@ public class TipOverConfig implements Configuration {
         this.height = Integer.parseInt(this.grid[coords.row()][coords.col()]);
     }
 
+    /**
+     * Creates neighboring configs
+     * @param other current config
+     * @param direction decides tiles next to current
+     */
     public TipOverConfig(TipOverConfig other, String direction) {
+        // copies data
         this.coords = other.coords;
         this.grid = new String[width][length];
 
@@ -58,11 +74,15 @@ public class TipOverConfig implements Configuration {
             System.arraycopy(other.grid[r], 0, this.grid[r], 0, length);
         }
 
+        // Depending on direction, will create a new config with new coordinates
         switch (direction) {
             case "North" -> {
+                // checks if coords will be in bounds
                 if(other.coords.row() - other.height >= 0) {
                     if (other.height > 1) {
-                        if (this.grid[other.coords.row()-1][other.coords.col()].equals("0")) {
+                        if (this.grid[other.coords.row()-1][other.coords.col()].equals("0")
+                                && this.grid[other.coords.row() - other.getHeight()][other.coords.col()].equals("0")) {
+                            // decides if tower will be tipped over
                             for (int i = 1; i < other.height + 1; i++) {
                                 this.grid[other.coords.row()][other.coords.col()] = "0";
                                 this.grid[other.coords.row()-i][other.coords.col()] = "1";
@@ -87,7 +107,8 @@ public class TipOverConfig implements Configuration {
             case "East" -> {
                 if(other.coords.col() + other.height < length) {
                     if (other.height > 1) {
-                        if (this.grid[other.coords.row()][other.coords.col() + 1].equals("0")) {
+                        if (this.grid[other.coords.row()][other.coords.col() + 1].equals("0")
+                                && this.grid[other.coords.row()][other.coords.col() + other.getHeight()].equals("0")) {
                             for (int i = 1; i < other.height + 1; i++) {
                                 this.grid[other.coords.row()][other.coords.col()] = "0";
                                 this.grid[other.coords.row()][other.coords.col() + i] = "1";
@@ -112,7 +133,8 @@ public class TipOverConfig implements Configuration {
             case "South" -> {
                 if(other.coords.row() + other.height < width) {
                     if (other.height > 1) {
-                        if (this.grid[other.coords.row()+1][other.coords.col()].equals("0")) {
+                        if (this.grid[other.coords.row()+1][other.coords.col()].equals("0")
+                                && this.grid[other.coords.row() + other.getHeight()][other.coords.col()].equals("0")) {
                             for (int i = 1; i < other.height + 1; i++) {
                                 this.grid[other.coords.row()][other.coords.col()] = "0";
                                 this.grid[other.coords.row()+i][other.coords.col()] = "1";
@@ -137,7 +159,8 @@ public class TipOverConfig implements Configuration {
             case "West" -> {
                 if (other.coords.col() - other.height >= 0) {
                     if (other.height > 1) {
-                        if (this.grid[other.coords.row()][other.coords.col() - 1].equals("0")) {
+                        if (this.grid[other.coords.row()][other.coords.col() - 1].equals("0")
+                                && this.grid[other.coords.row()][other.coords.col() - other.getHeight()].equals("0")) {
                             for (int i = 1; i < other.height + 1; i++) {
                                 this.grid[other.coords.row()][other.coords.col()] = "0";
                                 this.grid[other.coords.row()][other.coords.col() - i] = "1";
@@ -163,15 +186,27 @@ public class TipOverConfig implements Configuration {
         this.height = Integer.parseInt(this.grid[coords.row()][coords.col()]);
     }
 
+    /**
+     * Is the tower tipped over
+     * @return tipped
+     */
     public boolean tipped() {
         return tipped;
     }
 
+    /**
+     * Checks if the config is the solution
+     * @return true if config coords is equal to the goal
+     */
     @Override
     public boolean isSolution() {
         return this.coords.equals(goal);
     }
 
+    /**
+     * Gets neighbors of current config
+     * @return Set of Configs
+     */
     @Override
     public Set<Configuration> getNeighbors() {
         Set<Configuration> neighbors = new HashSet<>();
@@ -181,6 +216,7 @@ public class TipOverConfig implements Configuration {
         TipOverConfig South = new TipOverConfig(this, "South");
         TipOverConfig West = new TipOverConfig(this, "West");
 
+        // If the heights are 0, then it's not a valid config
         if (North.height != 0) {
             neighbors.add(North);
         }
@@ -197,26 +233,45 @@ public class TipOverConfig implements Configuration {
         return neighbors;
     }
 
+    /**
+     * Adds to total configs ran
+     */
     @Override
     public void addTotals() {
         total++;
     }
 
+    /**
+     * Adds to unique configs
+     */
     @Override
     public void addUnique() {
         unique++;
     }
 
+    /**
+     * Returns total configs
+     * @return total
+     */
     @Override
     public int returnTotal() {
         return total;
     }
 
+    /**
+     * Returns unique configs
+     * @return unique
+     */
     @Override
     public int returnUnique() {
         return unique;
     }
 
+    /**
+     * Checks if configs are the same
+     * @param o
+     * @return true if they are
+     */
     @Override
     public boolean equals(Object o) {
         boolean result = false;
@@ -234,15 +289,27 @@ public class TipOverConfig implements Configuration {
         return result;
     }
 
+    /**
+     * Returns height
+     * @return height
+     */
     public int getHeight() {
         return this.height;
     }
 
+    /**
+     * Returns hashCode of coords and grid
+     * @return int
+     */
     @Override
     public int hashCode() {
         return this.coords.hashCode() + Arrays.deepHashCode(this.grid);
     }
 
+    /**
+     * String format of grid
+     * @return String
+     */
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder("    ");

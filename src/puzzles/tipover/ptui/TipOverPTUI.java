@@ -7,7 +7,7 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 /**
- * DESCRIPTION
+ * Creates a text based version of the tip over game
  * @author YOUR NAME HERE
  * November 2021
  */
@@ -20,7 +20,7 @@ public class TipOverPTUI implements Observer<TipOverModel, Object>{
         initializeView();
     }
 
-    public void run() throws FileNotFoundException {
+    public void run(){
         this.model.show();
         System.out.println("File Loaded");
         Scanner in = new Scanner(System.in);
@@ -33,21 +33,35 @@ public class TipOverPTUI implements Observer<TipOverModel, Object>{
                     break;
                 } else if (fields[0].startsWith("m")) {
                     if (fields[0].equals("move")) {
-                        if (fields[1].equals("north")) {
-                            this.model.getNorth();
-
-                        } else if (fields[1].equals("east")) {
-                            this.model.getEast();
-
-                        } else if (fields[1].equals("south")) {
-                            this.model.getSouth();
-
-                        } else if (fields[1].equals("west")) {
-                            this.model.getWest();
-
-                        } else {
-                            System.out.println("Illegal Command");
-                            this.displayHelp();
+                        switch (fields[1]) {
+                            case "north" -> {
+                                this.model.getNorth();
+                                if (!model.isTipped() && !this.model.getConfig().isSolution()) {
+                                    this.model.show();
+                                }
+                            }
+                            case "east" -> {
+                                this.model.getEast();
+                                if (!model.isTipped() && !this.model.getConfig().isSolution()) {
+                                    this.model.show();
+                                }
+                            }
+                            case "south" -> {
+                                this.model.getSouth();
+                                if (!model.isTipped() && !this.model.getConfig().isSolution()) {
+                                    this.model.show();
+                                }
+                            }
+                            case "west" -> {
+                                this.model.getWest();
+                                if (!model.isTipped() && !this.model.getConfig().isSolution()) {
+                                    this.model.show();
+                                }
+                            }
+                            default -> {
+                                System.out.println("Illegal Command");
+                                this.displayHelp();
+                            }
                         }
                     }
                     else {
@@ -59,6 +73,9 @@ public class TipOverPTUI implements Observer<TipOverModel, Object>{
                         this.displayHelp();
                     } else if (fields[0].equals("hint")) {
                         this.model.getHint();
+                        if (!model.isTipped()) {
+                            this.model.show();
+                        }
                     } else {
                         System.out.println("Illegal Command");
                         this.displayHelp();
@@ -66,10 +83,12 @@ public class TipOverPTUI implements Observer<TipOverModel, Object>{
                 } else if (fields[0].startsWith("r")) {
                     if (fields[0].equals("reload")) {
                         this.model.reload();
+                        this.model.show();
                     }
                 } else if (fields[0].startsWith("l")) {
                     try {
                         model.loadNew(fields[1]);
+                        this.model.show();
                     }
                     catch (FileNotFoundException e) {
                         System.out.println("File Not Found");
@@ -82,12 +101,15 @@ public class TipOverPTUI implements Observer<TipOverModel, Object>{
     @Override
     public void update(TipOverModel o, Object o2) {
         if (this.model.getConfig().isSolution()) {
+            this.model.show();
             System.out.println("YOU WON");
         }
         if (this.model.isTipped()) {
+            this.model.show();
             System.out.println("A tower has been tipped over");
         }
         if (!this.model.isSolvable()) {
+            System.out.println("Unsolvable Board");
             System.out.println("Reload or Pick a New Board");
         }
     }
@@ -101,11 +123,15 @@ public class TipOverPTUI implements Observer<TipOverModel, Object>{
     }
 
     public void displayHelp() {
-        System.out.println("Legal Commands are...\n\t> help : Show all commands.\n\t" +
-                "> move {north|south|east|west}: Go in given direction, possibly tipping a tower. (1 argument)\n\t" +
-                "> reload filename: Load the most recent file again.\n\t" +
-                "> load {board-file-name}: Load a new game board file. (1 argument)\n\t" +
-                "> hint Make the next move for me.\n\t> show Display the board.\n\t> quit");
+        System.out.println("""
+                Legal Commands are...
+                \t> help : Show all commands.
+                \t> move {north|south|east|west}: Go in given direction, possibly tipping a tower. (1 argument)
+                \t> reload filename: Load the most recent file again.
+                \t> load {board-file-name}: Load a new game board file. (1 argument)
+                \t> hint Make the next move for me.
+                \t> show Display the board.
+                \t> quit""");
     }
 
     public static void main( String[] args ) throws FileNotFoundException {
