@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * DESCRIPTION
- * @author YOUR NAME HERE
+ * @author Darian Cheung, Team bingbong
  * November 2021
  */
 public class TipOver {
