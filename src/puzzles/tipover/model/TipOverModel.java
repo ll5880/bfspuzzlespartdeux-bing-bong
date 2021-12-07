@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * Creates a model to be displayed
- * @author Darian Cheung
+ * @author Darian Cheung, Team bingbong
  * November 2021
  */
 public class TipOverModel{

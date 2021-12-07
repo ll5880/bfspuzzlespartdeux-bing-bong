@@ -21,7 +21,7 @@ import java.io.FileNotFoundException;
 
 /**
  * Creates a user interface, can play tipover using buttons to control the tipper
- * @author Darian Cheung
+ * @author Darian Cheung, Team bingbong
  * November 2021
  */
 public class TipOverGUI extends Application

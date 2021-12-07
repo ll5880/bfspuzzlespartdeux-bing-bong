@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 /**
  * Creates a text based version of the tip over game
- * @author YOUR NAME HERE
+ * @author Darian Cheung, Team bingbong
  * November 2021
  */
 public class TipOverPTUI implements TipOverObserver<TipOverModel, Object>{
