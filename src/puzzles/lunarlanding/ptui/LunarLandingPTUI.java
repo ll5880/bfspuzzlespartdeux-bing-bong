@@ -1,14 +1,7 @@
 package puzzles.lunarlanding.ptui;
 
-import puzzles.lunarlanding.model.LunarLandingConfig;
 import puzzles.lunarlanding.model.LunarLandingModel;
 import puzzles.lunarlanding.model.LunarObserver;
-import puzzles.tipover.model.TipOverObserver;
-import solver.Configuration;
-import solver.Solver;
-
-import java.io.FileNotFoundException;
-import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -21,8 +14,10 @@ public class LunarLandingPTUI implements LunarObserver<LunarLandingModel, Object
 
     private LunarLandingModel model;
     private boolean chosenFigure = false;
-    private boolean reachedSolution = false;
 
+    /**
+     * Construct the PTUI
+     */
     public LunarLandingPTUI(String arg) {
         this.model = new LunarLandingModel(arg);
         this.model.load(arg);
@@ -30,7 +25,6 @@ public class LunarLandingPTUI implements LunarObserver<LunarLandingModel, Object
     }
 
     //Controller
-
     /**
      * Read a command and execute loop.
      */
@@ -48,8 +42,6 @@ public class LunarLandingPTUI implements LunarObserver<LunarLandingModel, Object
                     //reload
                     else if (words[0].startsWith("r")) {
                         this.model.reload();
-                        //reload a puzzle = solution not reached
-                        reachedSolution = false;
                     }
                     //choose
                     else if (words[0].startsWith("c")) {
@@ -59,15 +51,12 @@ public class LunarLandingPTUI implements LunarObserver<LunarLandingModel, Object
                     //load
                     else if (words[0].startsWith("l")) {
                         this.model.load(words[1]);
-                        reachedSolution = false;
                     }
                     //go
                     else if (words[0].startsWith("g")) {
                         if (chosenFigure) {
-                            reachedSolution = false;
                             this.model.go(words[0], words[1]);
                             chosenFigure = false;
-
                         } else {
                             System.out.println("Choose a character to move first");
                         }
@@ -88,21 +77,18 @@ public class LunarLandingPTUI implements LunarObserver<LunarLandingModel, Object
         }
 
     //view
+    /**
+     * Given user interaction the game layout changes. If a figure is clicked it will be moved.
+     * It keeps track of the figures, and tells them if they have won the game.
+     *
+     * @param lunarLandingModel the model being updated
+     * @param o the updated info
+     */
     @Override
     public void update(LunarLandingModel lunarLandingModel, Object o) {
-        //the hint method
         if (o != null){
             System.out.println(o);
         }
-
-        //if a figure has been moved
-//        if (this.model.getFigureMoved()) {
-//            this.model.show();
-//            reachedSolution = false;
-//        }
-
-
-
     }
 
     /**
@@ -114,6 +100,11 @@ public class LunarLandingPTUI implements LunarObserver<LunarLandingModel, Object
 
     }
 
+    /**
+     * The main method used to play a game.
+     *
+     * @param args Command line arguments, gives the file name of the puzzle being played
+     */
     public static void main( String[] args ) {
         LunarLandingPTUI ptui = new LunarLandingPTUI(args[0]);
         ptui.run();

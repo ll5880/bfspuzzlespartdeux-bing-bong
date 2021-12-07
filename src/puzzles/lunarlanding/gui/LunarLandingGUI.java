@@ -26,7 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * The LunarLandingGUI application is the UI for LunarLanding
  * @author Lucie Lim
  * November 2021
  */
@@ -35,16 +35,12 @@ public class LunarLandingGUI extends Application
 
     private LunarLandingModel model;
     private GridPane mainGridPane;
-    private ArrayList <FigureButton> figureButtons = new ArrayList<>();
     private Stage stage;
     private Label text;
-    private boolean reachedSolution = false;
-
 
     /**
      * initalizes the model and adds an observer
      *
-     * @throws Exception
      */
     @Override
     public void init(){
@@ -53,25 +49,12 @@ public class LunarLandingGUI extends Application
         model.addObserver(this);
     }
 
-    private class FigureButton extends Button {
-
-        private Coordinates coords;
-        private String name;
-
-        public FigureButton(Coordinates coords, String name){
-            this.coords = coords;
-            this.name = name;
-        }
-
-        public Coordinates getButtonCoords() {
-            return coords;
-        }
-
-        public String getName () {
-            return name;
-        }
-    }
-
+    /**
+     * Gets the image of a Figure given their name
+     *
+     * @param key, a Figures name
+     * @return Image, a figures image
+     */
     private Image getFigure(String key) {
         switch (key) {
             case ("E"):
@@ -93,50 +76,53 @@ public class LunarLandingGUI extends Application
         }
     }
 
+    /**
+     * Makes a gridpane that the user sees and interacts with
+     *
+     * @return GridPane
+     */
     private GridPane makeGridPane(){
         mainGridPane = new GridPane();
         for (int r = 0; r < model.getCurrentConfig().getRow(); r++){
             for (int c = 0; c < model.getCurrentConfig().getColumn(); c++){
                 //makes initial grid
                 Coordinates coords = new Coordinates(r, c);
+                Button button = new Button();
 
                 //finds if a figure should exist at that coords
                 String figure = model.getCurrentConfig().find(coords);
 
                 if (figure != null) {
                     //assigns an image of a figure to that button
-                    FigureButton button = new FigureButton(coords, figure);
                     button.setGraphic(new ImageView(getFigure(figure)));
-                    //gets a hashmap of all the buttons with figures on it
-                    figureButtons.add(button);
                     int position = (r * model.getCurrentConfig().getRow()) + c;
                     button.setOnAction(event -> {
                         model.choose(position);
                     });
-                    mainGridPane.add(button, c, r);
 
                 } else if (model.getCurrentConfig().getLunarLanderCoordinates().equals(coords)) {
                     //if coords are equals to the coords of the lunarlander adds it to the button
-                    FigureButton button = new FigureButton(coords, "!");
                     button.setGraphic(new ImageView(getFigure("!")));
-                    mainGridPane.add(button, c, r);
                 } else {
-                    FigureButton button = new FigureButton(coords, figure);
                     ImageView view = new ImageView();
                     view.setPreserveRatio(true);
                     view.setFitHeight(75);
                     view.setFitWidth(75);
                     button.setGraphic(view);
-                    mainGridPane.add(button, c, r);
                 }
+                mainGridPane.add(button, c, r);
             }
         }
         return mainGridPane;
     }
 
+    /**
+     * Creates the layout of the Game. Creates 3 buttons: load, relaod, and hint, and adds the actual play board.
+     *
+     * @param stage the stage being shown to the user
+     */
     @Override
     public void start( Stage stage ) {
-        //init();
         stage.setTitle( "Lunar Lander" );
         BorderPane mainBorderPane = new BorderPane();
 
@@ -158,19 +144,19 @@ public class LunarLandingGUI extends Application
         BorderPane bottom = new BorderPane();
         GridPane controls = new GridPane();
 
-        Button Up = new Button("Up");
+        Button Up = new Button("↑");
         controls.add(Up, 1 , 0);
         Up.setOnAction(event -> model.go("go", "north"));
 
-        Button Down = new Button("Down");
+        Button Down = new Button("↓");
         controls.add(Down, 1, 2);
         Down.setOnAction(event -> model.go("go", "south"));
 
-        Button Right = new Button("Right");
+        Button Right = new Button("→");
         controls.add(Right, 2,1 );
         Right.setOnAction(event -> model.go("go", "east"));
 
-        Button Left = new Button("Left");
+        Button Left = new Button("←");
         controls.add(Left, 0, 1);
         Left.setOnAction(event -> model.go("go", "west"));
 
@@ -211,6 +197,13 @@ public class LunarLandingGUI extends Application
         stage.show();
     }
 
+    /**
+     * Given user interaction the game layout changes. If a figure is clicked it will be moved.
+     * It keeps track of the figures, and tells them if they have won the game.
+     *
+     * @param lunarLandingModel the model being updated
+     * @param o the updated info
+     */
     @Override
     public void update( LunarLandingModel lunarLandingModel, Object o) {
 
@@ -218,44 +211,35 @@ public class LunarLandingGUI extends Application
             for (int c = 0; c < model.getCurrentConfig().getColumn(); c++) {
                 //makes initial grid
                 Coordinates coords = new Coordinates(r, c);
+                Button button = new Button();
 
                 //finds if a figure should exist at that coords
                 String figure = model.getCurrentConfig().find(coords);
 
                 if (figure != null) {
                     //assigns an image of a figure to that button
-                    FigureButton button = new FigureButton(coords, figure);
                     button.setGraphic(new ImageView(getFigure(figure)));
                     //gets a hashmap of all the buttons with figures on it
-                    figureButtons.add(button);
                     int position = (r * model.getCurrentConfig().getRow()) + c;
                     button.setOnAction(event -> {
                         model.choose(position);
                     });
-                    mainGridPane.add(button, c, r);
                 } else if (model.getCurrentConfig().getLunarLanderCoordinates().equals(coords)) {
                     //if coords are equals to the coords of the lunarlander adds it to the button
-                    FigureButton button = new FigureButton(coords, "!");
                     button.setGraphic(new ImageView(getFigure("!")));
-                    mainGridPane.add(button, c, r);
                 } else {
-                    FigureButton button = new FigureButton(coords, figure);
                     ImageView view = new ImageView();
                     view.setPreserveRatio(true);
                     view.setFitHeight(75);
                     view.setFitWidth(75);
                     button.setGraphic(view);
-                    mainGridPane.add(button, c, r);
                 }
+                mainGridPane.add(button, c, r);
             }
         }
-
-        // if a move is illegal then it will show illegal move
-
         if (o != null){
             text.setText(o.toString());
         }
-
     }
 
     /**
@@ -264,7 +248,7 @@ public class LunarLandingGUI extends Application
      */
     private void openFile(File file) {
         this.mainGridPane.getChildren().clear();
-        model.load("data/lunarlander/" + file.getName());
+        model.load("data/lunarlanding/" + file.getName());
     }
 
     /**
