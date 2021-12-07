@@ -9,6 +9,7 @@ import java.util.List;
 
 /**
  * Contains the model of the lunar landing puzzle
+ *
  * @author Lucie Lim
  * November 2021
  */
@@ -18,9 +19,6 @@ public class LunarLandingModel {
     private String filename;
     private Solver solver;
     private String figure;
-    private int hintPath = 0;
-    private boolean figureMoved;
-    private boolean solvable;
 
     private List< LunarObserver< LunarLandingModel, Object > > observers;
 
@@ -36,116 +34,172 @@ public class LunarLandingModel {
      *   method works with, and returns, objects of type Configuration.
      */
 
+    /**
+     * Construct a LunarLandingModel; there is only one configuration.
+     */
     public LunarLandingModel (String file) {
         this.observers = new LinkedList<>();
         filename = file;
         currentConfig = new LunarLandingConfig(filename);
         solver = new Solver();
         figure = null;
-        figureMoved = false;
-
     }
 
+    /**
+     * Loads a new puzzle
+     *
+     * @param file the new file with the puzzle.
+     */
     public void load(String file) {
         this.currentConfig = new LunarLandingConfig(file);
         if (!currentConfig.getExceptionCaught()) {
             this.filename = file;
             show();
-            System.out.println("File loaded");
+            announce("File loaded");
         }
     }
 
+    /**
+     * Reloads the puzzle
+     */
     public void reload() {
         this.currentConfig = new LunarLandingConfig(this.filename);
         System.out.println(currentConfig);
-        solvable = true;
+        announce("File loaded");
     }
 
+    /**
+     * Choose a figure to be moved, given coordinates
+     *
+     * @param row the row of the chosen figure
+     * @param col the column of the chosen figure
+     */
     public void choose(int row, int col) {
         figure = this.currentConfig.find(new Coordinates(row, col));
         if (figure == null){
-            System.out.println("No figure at that position");
+            announce("No figure at that position");
         }
     }
 
+    /**
+     * Choose a figure to be moved, given a number representing the position of the figure
+     *
+     * @param position the position of the figure on the board
+     */
+    public void choose(int position) {
+        int r = position / currentConfig.getRow();
+        int c = position - (r * currentConfig.getRow());
+        figure = this.currentConfig.find(new Coordinates(r, c));
+        if (figure == null){
+            announce("No figure at that position");
+        }
+    }
+
+    /**
+     * Moves the figure given the proper command and direction
+     *
+     * @param go the command
+     * @param direction the direction the figure is moving towards
+     */
     public void go (String go, String direction) {
         if (figure != null) {
             if (go.equals("go")) {
                 switch (direction) {
                     case "north":
+                        System.out.println(currentConfig);
                         if (this.currentConfig.canMove(figure, direction).equals("North")) {
                             currentConfig.setFigure(figure, this.currentConfig.MoveNorth(figure));
-                            announce(null);
-                            figureMoved = true;
-                            //return currentConfig;
+                            announce("");
+                            show();
+                            if (this.currentConfig.isSolution()) {
+                                announce("You Win");
+                            }
                         } else {
-                            System.out.println("illegal move");
-                            figureMoved = false;
+                            announce("illegal move");
                         }
                         break;
                     case "south":
                         if (this.currentConfig.canMove(figure, direction).equals("South")) {
                             currentConfig.setFigure(figure, this.currentConfig.MoveSouth(figure));
-                            announce("fun");
-                            figureMoved = true;
+                            announce("");
+                            show();
+                            if (this.currentConfig.isSolution()) {
+                                announce("You Win");
+                            }
                         } else {
-                            System.out.println("illegal move");
-                            figureMoved = false;
+                            announce("illegal move");
                         }
                         break;
                     case "east":
                         if (this.currentConfig.canMove(figure, direction).equals("East")) {
                             currentConfig.setFigure(figure, this.currentConfig.MoveEast(figure));
-                            announce("fun");
-                            figureMoved = true;
+                            announce("");
+                            show();
+                            if (this.currentConfig.isSolution()) {
+                                announce("You Win");
+                            }
                         } else {
-                            System.out.println("illegal move");
-                            figureMoved = false;
+                            announce("illegal move");
                         }
                         break;
                     case "west":
                         if (this.currentConfig.canMove(figure, direction).equals("West")) {
                             currentConfig.setFigure(figure, this.currentConfig.MoveWest(figure));
-                            announce("fun");
-                            figureMoved = true;
+                            announce("");
+                            show();
+                            if (this.currentConfig.isSolution()) {
+                                announce("You Win");
+                            }
                         } else {
-                            System.out.println("illegal move");
-                            figureMoved = false;
+                            announce("illegal move");
                         }
                         break;
                     default:
-                        System.out.println("illegal command");
-                        figureMoved = false;
+                        announce("illegal command");
                         break;
                 }
             }
             else {
-                System.out.println("illegal command" + "\n" + "Legal commands are...\n");
+                announce("illegal command" + "\n" + "Legal commands are...\n");
                 Help();
             }
         }
     }
 
-    //uses solve to get the next config, changes the current config to the next
-    //config
+    /**
+     * Gives the user a hint, sets the current configuration to one of the configs in the solution path
+     * of the puzzle.
+     *
+     * Will tell if a board is unsolvable or is a board is already solved.
+     */
     public void hint () {
         List<Configuration> solution = Solver.solve(currentConfig);
-        if (currentConfig.isSolution()) {
-            announce("I WON!");
-        } else if (solution.size() == 0) {
-            solvable = false;
+        if (isSolvable() == false) {
             announce("Unsolvable board");
         } else {
-            currentConfig = (LunarLandingConfig) solution.remove(1);
-            announce(null);
+            if (solution.size() > 1) {
+                currentConfig = (LunarLandingConfig) solution.remove(1);
+                show();
+                announce("");
+                if (currentConfig.isSolution()) {
+                    announce("You Win!");
+                }
+            } else {
+                announce("Board is already solved");
+            }
         }
     }
 
-    //showing where we are on the board
+    /**
+     * shows the board
+     */
     public void show() {
         System.out.println(currentConfig.toString());
     }
 
+    /**
+     * Print on standard out help for the game.
+     */
     public void Help() {
         System.out.println( "show                              -- display the board" );
         System.out.println( "load (filename)                   -- loads a new puzzle from the provided file" );
@@ -157,20 +211,26 @@ public class LunarLandingModel {
         System.out.println( "help                              -- show all commands" );
     }
 
-    public boolean getFigureMoved() {
-        return figureMoved;
-    }
-
+    /**
+     * checks if the current configuration is solvable
+     *
+     * @return boolean
+     */
     public boolean isSolvable() {
-        return solvable;
+        List<Configuration> solution = Solver.solve(currentConfig);
+        if (solution.size() == 0) {
+            return false;
+        }
+        return true;
     }
 
+    /**
+     * Returns the current lunarlandingConfig
+     *
+     * @return LunarLandingConfig
+     */
     public LunarLandingConfig getCurrentConfig () {
         return currentConfig;
-    }
-
-    public String getFilename() {
-        return filename;
     }
 
     /**

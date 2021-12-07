@@ -23,6 +23,7 @@ public class LunarLandingConfig implements Configuration {
     private int numOfConfigs = 0;
     private int total = 1;
     private int unique = 1;
+
     private Coordinates lunarLanderCoordinates;
 
     //holds the info of the figures
@@ -125,16 +126,24 @@ public class LunarLandingConfig implements Configuration {
 
     }
 
+    /**
+     * checks if there was an exception caught
+     *
+     * @return boolean
+     *
+     */
      public boolean getExceptionCaught() {
         return exceptionCaught;
      }
 
+    /**
+     * Sets the chosen figure on the grid to new coordinates and updates the grid
+     */
      public void setFigure(String figure, Coordinates coords) {
          Coordinates oldcords = figures.get(figure);
          figures.put(figure, coords);
          board.set(figure, figures.get(figure).row(), figures.get(figure).col());
          board.set("_", oldcords.row(), oldcords.col());
-
      }
 
     /**
@@ -362,18 +371,30 @@ public class LunarLandingConfig implements Configuration {
         return null;
     }
 
+    /**
+     * Returns an int of the row
+     */
     public int getRow() {
         return row;
     }
 
+    /**
+     * Returns an int of the column
+     */
     public int getColumn() {
         return column;
     }
 
+    /**
+     * Returns the Coordinates of the LunarLander
+     */
     public Coordinates getLunarLanderCoordinates() {
         return lunarLanderCoordinates;
     }
 
+    /**
+     * Returns a Hashmap of the figures in the lunarlander configuration
+     */
     public HashMap<String, Coordinates> getFigures() {
         return figures;
     }

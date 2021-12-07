@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="LunarLandingPTUI ?" type="Application" factoryName="Application" editBeforeRun="true">
+  <configuration default="false" name="LunarLanding?" type="Application" factoryName="Application" editBeforeRun="true">
     <option name="INCLUDE_PROVIDED_SCOPE" value="true" />
-    <option name="MAIN_CLASS_NAME" value="puzzles.lunarlanding.ptui.LunarLandingPTUI" />
+    <option name="MAIN_CLASS_NAME" value="puzzles.lunarlanding.LunarLanding" />
     <module name="BFSPuzzles" />
     <option name="PROGRAM_PARAMETERS" value="data/lunarlanding/lula-4.txt" />
     <extension name="coverage">
