@@ -2,17 +2,17 @@
 
 ## Description
 A puzzle solver that utilizes the breadth first search algorithm
-to find solutions on 4 different puzzles
+to find solutions on 4 different puzzles.
 
 ## How to play
-You have 4 puzzles to choose from: clock, water, lunarlanding, and tipover.
+You have 4 puzzles to choose from: clock, water, lunar landing, and tip over.
 Clock and water puzzles are unplayable puzzles. They are mainly to test the 
 BFS solver. 
 
 Lunar landing and tip over are playable puzzles, and you can play it in the 
-terminal of the IDE or on the GUI.
+terminal of the IDE or on a GUI.
 
-For the IDE, in the terminal enter h to see options and their functions
+For the IDE, in the terminal enter h to see options and their functions.
 
 For the GUI, you can see the board, pieces, and arrow keys. In addition, you 
 can see other buttons such as reset, reload, and hint.
@@ -62,25 +62,44 @@ the puzzle as solved.
 ### MVC 
 The puzzles utilize the model view controller architecture. The rules and
 guidelines behind the puzzles are upheld in the model, the user can view and interact
-with the puzzle in the GUI, and the middle man that connects the view to the model
-is the PTUI.
+with the puzzle in the GUI and the PTUI. Certain functions act as the controller 
+such as updating the board after a piece has been moved.
 
 ### GUI & PTUI
 The GUI is the main component where the user can view and interact with the puzzle. 
 The user can select different pieces from the board and choose a direction. They also
 have several buttons to reload, reset, or get a hint for the puzzle. The board will update
-and the GUI will reflect those changes to the user.
-
-The PTUI is the controller behind the solver, and it acts as a middle man by receiving 
-user choices from the GUI and send it to the model to update the board. Any changes from 
-the model will be sent back to the PTUI and displayed to the viewer through the GUI. 
+and the GUI will reflect those changes to the user. The PTUI is another main component of 
+viewing the puzzle but the board is represented in the terminal instead of an interactive 
+popup. The user can see the board but they cannot directly click on a piece and move it, they 
+would have to type in options and what piece they would like to move.
 
 ## Challenges
-Some challenges during the project was understanding how BFS works, how to apply it to the 
-puzzle, and how the model-view-controller works. At first glance the concept of BFS is simple enough to 
+Some challenges during the project was understanding how to apply BFS to the 
+puzzle, and how the model-view-controller works. 
+
+At first glance the concept of BFS is simple enough to 
 understand, as starting at the root node the algorithm visits each child node from the root, and 
 once done it will go back to the 1st child and visit all of its children. But applying it to the puzzle was 
-difficult as I did not understand what was representing the child or root node. 
+difficult as I did not understand what was representing the child or root node. With assistance and
+clarification I was able to understand that the initial puzzle board was the root node and each child node 
+was a configuration of 1 of the pieces moving in 1 of the directions. Essentially every parent node is a
+configuration and each child of the parent was another configuration of the board with 1 of the pieces moving in 
+all possible directions. 
+
+The model-view-controller was a tough concept to grasp and create. I understood that the model
+was the logic behind the puzzle, so it's clear what functions I would have to create
+such as moving a piece, resetting the board, loading a puzzle, and getting a hint. However, the 
+controller aspect was tough to grasp. I understood it was to connect the model to the view however
+I expected it to have its own file or class in the project. I was not aware that in this project
+its certain functions in the model and gui file. Such functions are the update and move pieces 
+functions as the user can update the model and the model reflects those changes back to the viewer.
+
+Creating the GUI and PTUI was a unique experience for me because there's a lot of functions in the 
+javafx library and I was unsure how to display the updated positions of the figurines
+properly. After learning about the setOnAction and setOnGraphic functions I was able to 
+understand how to apply it to the project.
+
 
 ## Contributers 
 Lucie Lim - Lunar Landing Model-View-Controller
